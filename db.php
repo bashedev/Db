@@ -4,8 +4,10 @@ class db
 {
     private $dbhost = '';
     private $dbname = '';
-    private $dbpw = '';
+    private $dbpass = '';
     private $dbuser = '';
+    
+    public $pdo = null;
 
     public function __construct($dbname, $dbuser, $dbpass, $dbhost = 'localhost', $mode = 'dev')
     {
@@ -15,19 +17,20 @@ class db
         $this->dbuser = $dbuser;
 
         $this->mode = $mode;
+        
+        $this->pdo = $this->conn();
+    }
+    
+    public function __destruct()
+    {
+        $this->pdo = null;
     }
 
-    public function conn()
+    public function returnRow(PDOStatement $stmt)
     {
-        try
+        if ($this->safeExecute($stmt) && ($result = $stmt->fetchAll(PDO::FETCH_OBJ)) && (count($result) === 1))
         {
-            $dbh = new PDO("mysql:host={$this->dbhost};dbname={$this->dbname}", $this->dbuser, $this->dbpw);
-            $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // for debugging
-            return $dbh;
-        }
-        catch (PDOException $exc)
-        {
-            $this->handleException($exc);
+            return $result[0];
         }
         return false;
     }
@@ -72,10 +75,9 @@ class db
      */
     public function safeQuery($sql)
     {
-        $conn = $this->conn();
         try
         {
-            $stmt = $conn->query($sql);
+            $stmt = $this->pdo->query($sql);
             if ($stmt)
             {
                 return $stmt;
@@ -89,7 +91,21 @@ class db
         {
             $this->handleException($exc);
         }
-        $conn = null;
+    }
+    
+    protected function conn()
+    {
+        try
+        {
+            $dbh = new PDO("mysql:host={$this->dbhost};dbname={$this->dbname}", $this->dbuser, $this->dbpass);
+            $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // for debugging
+            return $dbh;
+        }
+        catch (PDOException $exc)
+        {
+            $this->handleException($exc);
+        }
+        return false;
     }
 
     private function handleException($exc)

@@ -1,6 +1,6 @@
 <?php
 
-class db
+abstract class db
 {
     private $dbhost = '';
     private $dbname = '';
@@ -26,7 +26,7 @@ class db
         $this->pdo = null;
     }
 
-    public function returnRow(PDOStatement $stmt)
+    protected function returnRow(PDOStatement $stmt)
     {
         if ($this->safeExecute($stmt) && ($result = $stmt->fetchAll(PDO::FETCH_OBJ)) && (count($result) === 1))
         {
@@ -44,7 +44,7 @@ class db
      * @param PDOStatement $stmt Fully prepared PDOStatement to be executed.
      * @return <bool> True on success, false on query error or exception.
      */
-    public function safeExecute(PDOStatement &$stmt)
+    protected function safeExecute(PDOStatement &$stmt)
     {
         try
         {
@@ -73,7 +73,7 @@ class db
      * @param string $sql
      * @return mixed PDOStatement on success, boolean false on error.
      */
-    public function safeQuery($sql)
+    protected function safeQuery($sql)
     {
         try
         {

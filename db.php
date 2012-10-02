@@ -6,8 +6,7 @@ abstract class db
     private $dbname = '';
     private $dbpass = '';
     private $dbuser = '';
-    
-    public $pdo = null;
+    protected $pdo = null;
 
     public function __construct($dbname, $dbuser, $dbpass, $dbhost = 'localhost', $mode = 'dev')
     {
@@ -17,13 +16,36 @@ abstract class db
         $this->dbuser = $dbuser;
 
         $this->mode = $mode;
-        
+
         $this->pdo = $this->conn();
     }
-    
+
     public function __destruct()
     {
         $this->pdo = null;
+    }
+
+    protected function conn()
+    {
+        try
+        {
+            $dbh = null;
+            if ($this->dbname === 'root')
+            {
+                $dbh = new PDO("mysql:host={$this->dbhost};", $this->dbuser, $this->dbpass);
+            }
+            else
+            {
+                $dbh = new PDO("mysql:host={$this->dbhost};dbname={$this->dbname}", $this->dbuser, $this->dbpass);
+            }
+            $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // for debugging
+            return $dbh;
+        }
+        catch (PDOException $exc)
+        {
+            $this->handleException($exc);
+        }
+        return false;
     }
 
     protected function returnRow(PDOStatement $stmt)
@@ -92,27 +114,12 @@ abstract class db
             $this->handleException($exc);
         }
     }
-    
-    protected function conn()
-    {
-        try
-        {
-            $dbh = new PDO("mysql:host={$this->dbhost};dbname={$this->dbname}", $this->dbuser, $this->dbpass);
-            $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // for debugging
-            return $dbh;
-        }
-        catch (PDOException $exc)
-        {
-            $this->handleException($exc);
-        }
-        return false;
-    }
 
     private function handleException($exc)
     {
         if ($this->mode = 'dev')
         {
-            echo $exc->getMessage();
+            echo $exc->getMessage() . "\n";
         }
         else if ($this->mode = 'prod')
         {

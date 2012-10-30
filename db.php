@@ -18,6 +18,11 @@ abstract class db
         $this->mode = $mode;
 
         $this->pdo = $this->conn();
+        
+        if (!$this->pdo)
+        {
+            throw new Exception('Could not connect to DB');
+        }
     }
 
     public function __destruct()

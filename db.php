@@ -1,11 +1,20 @@
 <?php
 
+/**
+ *  Copyright Bashe Development
+ *  2012
+ *
+ *  All rights reserved
+ *
+ */
+
 abstract class db
 {
     private $dbhost = '';
     private $dbname = '';
     private $dbpass = '';
     private $dbuser = '';
+    private $mode;
     protected $pdo = null;
 
     public function __construct($dbname, $dbuser, $dbpass, $dbhost = 'localhost', $mode = 'dev')
@@ -18,7 +27,7 @@ abstract class db
         $this->mode = $mode;
 
         $this->pdo = $this->conn();
-        
+
         if (!$this->pdo)
         {
             throw new Exception('Could not connect to DB');
@@ -122,11 +131,11 @@ abstract class db
 
     private function handleException($exc)
     {
-        if ($this->mode = 'dev')
+        if ($this->mode == 'dev')
         {
             echo $exc->getMessage() . "\n";
         }
-        else if ($this->mode = 'prod')
+        else if ($this->mode == 'prod')
         {
             error_log($exc->getMessage());
         }
@@ -134,11 +143,11 @@ abstract class db
 
     private function handlePdoError($stmt)
     {
-        if ($this->mode = 'dev')
+        if ($this->mode == 'dev')
         {
             print_r($stmt->errorInfo());
         }
-        else if ($this->mode = 'prod')
+        else if ($this->mode == 'prod')
         {
             error_log(implode(' - ', $stmt->errorInfo()));
         }

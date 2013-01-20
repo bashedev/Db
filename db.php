@@ -104,8 +104,6 @@ abstract class db
      * safeQuery tries to query the database with arbitrary sql code. Error checking
      * similar to safeExecute is done. 
      * 
-     * Note: this function opens and closes a db connection for every query.
-     * 
      * @param string $sql
      * @return mixed PDOStatement on success, boolean false on error.
      */

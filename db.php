@@ -7,59 +7,19 @@
  *  All rights reserved
  *
  */
-
-abstract class db
+abstract class db extends PDO
 {
-    private $dbhost = '';
-    private $dbname = '';
-    private $dbpass = '';
-    private $dbuser = '';
+
     private $mode;
-    protected $pdo = null;
 
-    public function __construct($dbname, $dbuser, $dbpass, $dbhost = 'localhost', $mode = 'dev')
+    public function __construct($name, $user, $pass, $host = 'localhost', $mode = 'dev')
     {
-        $this->dbhost = $dbhost;
-        $this->dbname = $dbname;
-        $this->dbpass = $dbpass;
-        $this->dbuser = $dbuser;
-
         $this->mode = $mode;
-
-        $this->pdo = $this->conn();
-
-        if (!$this->pdo)
-        {
-            throw new Exception('Could not connect to DB');
-        }
-    }
-
-    public function __destruct()
-    {
-        $this->pdo = null;
-    }
-
-    protected function conn()
-    {
-        try
-        {
-            $dbh = null;
-            if ($this->dbname === 'root')
-            {
-                $dbh = new PDO("mysql:host={$this->dbhost};", $this->dbuser, $this->dbpass);
-            }
-            else
-            {
-                $dbh = new PDO("mysql:host={$this->dbhost};dbname={$this->dbname}", $this->dbuser, $this->dbpass);
-            }
-            $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // for debugging
-            return $dbh;
-        }
-        catch (PDOException $exc)
-        {
-            $this->handleException($exc);
-        }
-        return false;
+        
+        $dsn = ($name === 'root') ? "mysql:host=$host" : "mysql:dbname=$name;host=$host";
+        parent::__construct($dsn, $user, $pass);
+        
+        $this->setAttribute(self::ATTR_ERRMODE, self::ERRMODE_EXCEPTION); // for debugging
     }
 
     protected function returnRow(PDOStatement $stmt)
@@ -150,4 +110,5 @@ abstract class db
             error_log(implode(' - ', $stmt->errorInfo()));
         }
     }
+
 }

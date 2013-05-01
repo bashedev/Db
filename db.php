@@ -15,10 +15,10 @@ abstract class db extends PDO
     public function __construct($name, $user, $pass, $host = 'localhost', $mode = 'dev')
     {
         $this->mode = $mode;
-        
+
         $dsn = ($name === 'root') ? "mysql:host=$host" : "mysql:dbname=$name;host=$host";
         parent::__construct($dsn, $user, $pass);
-        
+
         $this->setAttribute(self::ATTR_ERRMODE, self::ERRMODE_EXCEPTION); // for debugging
     }
 
@@ -71,7 +71,7 @@ abstract class db extends PDO
     {
         try
         {
-            $stmt = $this->pdo->query($sql);
+            $stmt = $this->query($sql);
             if ($stmt)
             {
                 return $stmt;

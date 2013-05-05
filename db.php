@@ -55,7 +55,7 @@ abstract class db extends PDO
         }
         catch (PDOException $exc)
         {
-            $this->handleException($exc);
+            $this->handleException($exc, $stmt);
         }
         return false;
     }
@@ -87,11 +87,14 @@ abstract class db extends PDO
         }
     }
 
-    private function handleException($exc)
+    private function handleException($exc, $stmt)
     {
         if ($this->mode == 'dev')
         {
-            echo $exc->getMessage() . "\n";
+            var_dump($stmt);
+            echo PHP_EOL . $exc->getMessage() . PHP_EOL;
+            var_dump($exc); 
+            echo PHP_EOL;
         }
         else if ($this->mode == 'prod')
         {

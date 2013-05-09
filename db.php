@@ -93,7 +93,7 @@ abstract class db extends PDO
         {
             var_dump($stmt);
             echo PHP_EOL . $exc->getMessage() . PHP_EOL;
-            var_dump($exc); 
+            //var_dump($exc); 
             echo PHP_EOL;
         }
         else if ($this->mode == 'prod')

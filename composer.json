@@ -1,0 +1,8 @@
+{
+    "name": "bashedev/db",
+    "autoload": {
+        "psr-0" : {
+            "Bashedev\\db" : "src"
+        }
+    }
+}

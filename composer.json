@@ -1,0 +1,13 @@
+{
+    "name": "bashedev/db",
+    "type": "library",
+    "description": "thin db interface to PDO",
+    "keywords": ["PDO", "database"],
+    "homepage": "http://bashedev.com",
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "autoload": {
+        "classmap": ["db.php"]
+    }
+}

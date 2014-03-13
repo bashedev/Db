@@ -17,7 +17,7 @@ abstract class db extends PDO
         $this->mode = $mode;
 
         $dsn = ($name === 'root') ? "mysql:host=$host" : "mysql:dbname=$name;host=$host";
-        parent::__construct($dsn, $user, $pass);
+        parent::__construct($dsn, $user, $pass, null);
 
         $this->setAttribute(self::ATTR_ERRMODE, self::ERRMODE_EXCEPTION); // for debugging
     }

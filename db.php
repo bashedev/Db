@@ -13,12 +13,12 @@ abstract class db extends PDO
     private $mode;
 
     public function __construct($name, $user, $pass, $host = 'localhost',
-            $mode = 'dev')
+        $mode = 'dev')
     {
         $this->mode = $mode;
 
         $dsn = ($name === 'root') ? "mysql:host=$host" :
-                "mysql:dbname=$name;host=$host";
+            "mysql:dbname=$name;host=$host";
 
         parent::__construct($dsn, $user, $pass, null);
 
@@ -28,8 +28,8 @@ abstract class db extends PDO
     protected function returnRow(PDOStatement $stmt)
     {
         if ($this->safeExecute($stmt) &&
-                ($result = $stmt->fetchAll(PDO::FETCH_OBJ)) &&
-                (count($result) === 1))
+            ($result = $stmt->fetchAll(PDO::FETCH_OBJ)) &&
+            (count($result) === 1))
         {
             return $result[0];
         }
@@ -97,7 +97,8 @@ abstract class db extends PDO
      * @param PDOException $exc
      * @param PDOStatement $stmt
      */
-    private function handleException(PDOException $exc, PDOStatement $stmt)
+    private function handleException(PDOException $exc,
+        PDOStatement $stmt = null)
     {
         if ($this->mode == 'dev')
         {

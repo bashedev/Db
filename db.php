@@ -2,7 +2,7 @@
 
 /**
  *  Copyright Bashe Development
- *  2012
+ *  2014
  *
  *  All rights reserved
  *
@@ -12,19 +12,24 @@ abstract class db extends PDO
 
     private $mode;
 
-    public function __construct($name, $user, $pass, $host = 'localhost', $mode = 'dev')
+    public function __construct($name, $user, $pass, $host = 'localhost',
+            $mode = 'dev')
     {
         $this->mode = $mode;
 
-        $dsn = ($name === 'root') ? "mysql:host=$host" : "mysql:dbname=$name;host=$host";
+        $dsn = ($name === 'root') ? "mysql:host=$host" :
+                "mysql:dbname=$name;host=$host";
+
         parent::__construct($dsn, $user, $pass, null);
 
-        $this->setAttribute(self::ATTR_ERRMODE, self::ERRMODE_EXCEPTION); // for debugging
+        $this->setAttribute(self::ATTR_ERRMODE, self::ERRMODE_EXCEPTION);
     }
 
     protected function returnRow(PDOStatement $stmt)
     {
-        if ($this->safeExecute($stmt) && ($result = $stmt->fetchAll(PDO::FETCH_OBJ)) && (count($result) === 1))
+        if ($this->safeExecute($stmt) &&
+                ($result = $stmt->fetchAll(PDO::FETCH_OBJ)) &&
+                (count($result) === 1))
         {
             return $result[0];
         }
@@ -33,12 +38,12 @@ abstract class db extends PDO
 
     /**
      *
-     * safeExecute tries to execute the PDOStatement. If a false response is returned
-     * from the database, the database error message is logged. If a PDOException is
-     * caught, the PDOException error message is logged as well.
+     * safeExecute tries to execute the PDOStatement. If a false response is 
+     * returned from the database, the database error message is logged. If a 
+     * PDOException is caught, the PDOException error message is logged as well.
      *
      * @param PDOStatement $stmt Fully prepared PDOStatement to be executed.
-     * @return <bool> True on success, false on query error or exception.
+     * @return bool True on success, false on query error or exception.
      */
     protected function safeExecute(PDOStatement &$stmt)
     {
@@ -61,8 +66,8 @@ abstract class db extends PDO
     }
 
     /**
-     * safeQuery tries to query the database with arbitrary sql code. Error checking
-     * similar to safeExecute is done. 
+     * safeQuery tries to query the database with arbitrary sql code. Error 
+     * checking similar to safeExecute is done. 
      * 
      * @param string $sql
      * @return mixed PDOStatement on success, boolean false on error.
@@ -87,14 +92,17 @@ abstract class db extends PDO
         }
     }
 
-    private function handleException($exc, $stmt)
+    /**
+     * 
+     * @param PDOException $exc
+     * @param PDOStatement $stmt
+     */
+    private function handleException(PDOException $exc, PDOStatement $stmt)
     {
         if ($this->mode == 'dev')
         {
             var_dump($stmt);
             echo PHP_EOL . $exc->getMessage() . PHP_EOL;
-            //var_dump($exc); 
-            echo PHP_EOL;
         }
         else if ($this->mode == 'prod')
         {
@@ -102,6 +110,10 @@ abstract class db extends PDO
         }
     }
 
+    /**
+     * 
+     * @param PDOStatement $stmt
+     */
     private function handlePdoError($stmt)
     {
         if ($this->mode == 'dev')
@@ -113,5 +125,4 @@ abstract class db extends PDO
             error_log(implode(' - ', $stmt->errorInfo()));
         }
     }
-
 }

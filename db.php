@@ -1,5 +1,7 @@
 <?php
 
+namespace bashedev\db;
+
 /**
  *  Copyright Bashe Development
  *  2014
@@ -7,7 +9,7 @@
  *  All rights reserved
  *
  */
-abstract class db extends PDO
+abstract class db extends \PDO
 {
 
     private $mode;

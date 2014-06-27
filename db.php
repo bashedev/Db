@@ -1,13 +1,17 @@
 <?php
-
-namespace bashedev\db;
-
 /**
  *  Copyright Bashe Development
  *  2014
  *
  *  All rights reserved
  *
+ */
+
+namespace bashedev\db;
+
+/**
+ * db is a PDO wrapper class that includes try-catch statements and error
+ * handling.
  */
 abstract class db extends \PDO
 {

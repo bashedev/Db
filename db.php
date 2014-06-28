@@ -31,10 +31,10 @@ abstract class db extends \PDO
         $this->setAttribute(self::ATTR_ERRMODE, self::ERRMODE_EXCEPTION);
     }
 
-    protected function returnRow(PDOStatement $stmt)
+    protected function returnRow(\PDOStatement $stmt)
     {
         if ($this->safeExecute($stmt) &&
-            ($result = $stmt->fetchAll(PDO::FETCH_OBJ)) &&
+            ($result = $stmt->fetchAll(\PDO::FETCH_OBJ)) &&
             (count($result) === 1))
         {
             return $result[0];
@@ -51,7 +51,7 @@ abstract class db extends \PDO
      * @param PDOStatement $stmt Fully prepared PDOStatement to be executed.
      * @return bool True on success, false on query error or exception.
      */
-    protected function safeExecute(PDOStatement &$stmt)
+    protected function safeExecute(\PDOStatement &$stmt)
     {
         try
         {
@@ -64,7 +64,7 @@ abstract class db extends \PDO
                 $this->handlePdoError($stmt);
             }
         }
-        catch (PDOException $exc)
+        catch (\PDOException $exc)
         {
             $this->handleException($exc, $stmt);
         }
@@ -92,7 +92,7 @@ abstract class db extends \PDO
                 $this->handlePdoError($stmt);
             }
         }
-        catch (PDOException $exc)
+        catch (\PDOException $exc)
         {
             $this->handleException($exc);
         }
@@ -103,8 +103,8 @@ abstract class db extends \PDO
      * @param PDOException $exc
      * @param PDOStatement $stmt
      */
-    private function handleException(PDOException $exc,
-        PDOStatement $stmt = null)
+    private function handleException(\PDOException $exc,
+        \PDOStatement $stmt = null)
     {
         if ($this->mode == 'dev')
         {
@@ -121,7 +121,7 @@ abstract class db extends \PDO
      * 
      * @param PDOStatement $stmt
      */
-    private function handlePdoError($stmt)
+    private function handlePdoError(\PDOStatement $stmt)
     {
         if ($this->mode == 'dev')
         {

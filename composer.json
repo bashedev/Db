@@ -1,7 +1,7 @@
 {
     "name": "bashedev/db",
     "description": "Thin database interface to PDO that handles exceptions and provides utility methods.",
-	"version": "0.0.1",
+	"version": "0.0.2",
     "type": "library",
     "keywords": ["PDO", "database"],
     "homepage": "http://bashedev.com",

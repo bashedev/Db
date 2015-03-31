@@ -27,12 +27,22 @@ abstract class Db extends \PDO
      * @param string $user
      * @param string $pass
      * @param string $host
+     * @param string $port
      * @param string $mode
      */
-    public function __construct($name, $user, $pass, $host = 'localhost', $mode = 'prod')
+    public function __construct($name, $user, $pass, $host = 'localhost', $port = null, $socket = null, $mode = 'prod')
     {
         $this->mode = $mode;
-        $dsn = ($name === 'root') ? "mysql:host=$host" : "mysql:dbname=$name;host=$host";
+        $dsn = ($name === 'root') ? 'mysql:' : "mysql:dbname=$name;";
+        $dsn .= "host=$host";
+        if (!is_null($port))
+        {
+            $dsn .= ";port=$port";
+        }
+        else if (!is_null($port))
+        {
+            $dsn .= ";unix_socket=$socket";
+        }
         parent::__construct($dsn, $user, $pass, null);
         $this->setAttribute(self::ATTR_ERRMODE, self::ERRMODE_EXCEPTION);
     }
